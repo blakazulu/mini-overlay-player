@@ -1,7 +1,10 @@
 
 import React, { useState, useRef, useEffect } from 'react';
-import { X, Play, Pause, SkipBack, SkipForward, Volume2 } from 'lucide-react';
+import { X, Play, Pause, SkipBack, SkipForward, Volume2, ArrowLeftRight } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { useMiniPlayer } from '@/contexts/MiniPlayerContext';
+import { Toggle } from './ui/toggle';
+import { ToggleGroup, ToggleGroupItem } from './ui/toggle-group';
 
 interface Position {
   x: number;
@@ -26,35 +29,13 @@ const defaultSong = {
 };
 
 const MiniPlayer: React.FC<MiniPlayerProps> = ({ onClose, currentSong = defaultSong }) => {
+  const { playerSize, setPlayerSize } = useMiniPlayer();
   const [position, setPosition] = useState<Position>({ x: 20, y: 20 });
   const [isDragging, setIsDragging] = useState(false);
   const [dragOffset, setDragOffset] = useState({ x: 0, y: 0 });
   const [isPlaying, setIsPlaying] = useState(false);
-  const [progress, setProgress] = useState(0); // 0-100
   
   const playerRef = useRef<HTMLDivElement>(null);
-  const intervalRef = useRef<number | null>(null);
-
-  // Set up progress simulation when playing
-  useEffect(() => {
-    if (isPlaying) {
-      intervalRef.current = window.setInterval(() => {
-        setProgress((prev) => {
-          if (prev >= 100) {
-            setIsPlaying(false);
-            return 0;
-          }
-          return prev + 0.1;
-        });
-      }, 225); // Adjust this for speed (225ms for a ~225 second song)
-    } else if (intervalRef.current) {
-      clearInterval(intervalRef.current);
-    }
-    
-    return () => {
-      if (intervalRef.current) clearInterval(intervalRef.current);
-    };
-  }, [isPlaying]);
 
   const handleMouseDown = (e: React.MouseEvent) => {
     if (!playerRef.current) return;
@@ -100,14 +81,198 @@ const MiniPlayer: React.FC<MiniPlayerProps> = ({ onClose, currentSong = defaultS
     };
   }, [isDragging]);
 
-  const formatTime = (seconds: number) => {
-    const mins = Math.floor(seconds / 60);
-    const secs = Math.floor(seconds % 60);
-    return `${mins}:${secs < 10 ? '0' + secs : secs}`;
+  // Size-specific style
+  const getPlayerWidth = () => {
+    switch (playerSize) {
+      case 'small': return '300px';
+      case 'medium': return '350px';
+      case 'large': return '450px';
+      default: return '300px';
+    }
   };
 
-  // Calculate current time based on progress
-  const currentTime = (progress / 100) * currentSong.duration;
+  // Determine what controls to show based on size
+  const renderControls = () => {
+    if (playerSize === 'small') {
+      return (
+        <div className="flex items-center space-x-3">
+          <button 
+            onClick={() => setIsPlaying(!isPlaying)} 
+            className="text-white hover:text-songhunt-red transition-colors"
+            title="Play/Pause (Ctrl+Space)"
+          >
+            {isPlaying ? <Pause size={18} /> : <Play size={18} />}
+          </button>
+          <button 
+            className="text-white hover:text-songhunt-red transition-colors"
+            title="Next Track (Ctrl+Right)"
+          >
+            <SkipForward size={18} />
+          </button>
+          <div className="text-xs text-gray-500 hidden md:block">Ctrl+Space</div>
+          <div className="text-xs text-gray-500 hidden md:block">Ctrl+Right</div>
+        </div>
+      );
+    } else if (playerSize === 'medium') {
+      return (
+        <div className="flex items-center space-x-3">
+          <button 
+            className="text-white hover:text-songhunt-red transition-colors"
+            title="Previous Track (Ctrl+Left)"
+          >
+            <SkipBack size={18} />
+          </button>
+          <button 
+            onClick={() => setIsPlaying(!isPlaying)} 
+            className="text-white hover:text-songhunt-red transition-colors"
+            title="Play/Pause (Ctrl+Space)"
+          >
+            {isPlaying ? <Pause size={18} /> : <Play size={18} />}
+          </button>
+          <button 
+            className="text-white hover:text-songhunt-red transition-colors"
+            title="Next Track (Ctrl+Right)"
+          >
+            <SkipForward size={18} />
+          </button>
+          <div className="flex flex-col text-xs text-gray-500 hidden md:block">
+            <div className="flex space-x-3">
+              <span>Ctrl+Left</span>
+              <span>Ctrl+Space</span>
+              <span>Ctrl+Right</span>
+            </div>
+          </div>
+        </div>
+      );
+    } else { // large
+      return (
+        <div className="flex items-center space-x-3">
+          <button 
+            className="text-white hover:text-songhunt-red transition-colors"
+            title="Previous Track (Ctrl+Left)"
+          >
+            <SkipBack size={18} />
+          </button>
+          <button 
+            onClick={() => setIsPlaying(!isPlaying)} 
+            className="text-white hover:text-songhunt-red transition-colors"
+            title="Play/Pause (Ctrl+Space)"
+          >
+            {isPlaying ? <Pause size={18} /> : <Play size={18} />}
+          </button>
+          <button 
+            className="text-white hover:text-songhunt-red transition-colors"
+            title="Next Track (Ctrl+Right)"
+          >
+            <SkipForward size={18} />
+          </button>
+          <button 
+            className="text-white hover:text-songhunt-red transition-colors"
+            title="Volume (Vol+/-)"
+          >
+            <Volume2 size={18} />
+          </button>
+          <div className="flex flex-col text-xs text-gray-500 hidden md:block">
+            <div className="flex space-x-2">
+              <span>Ctrl+Left</span>
+              <span>Ctrl+Space</span>
+              <span>Ctrl+Right</span>
+              <span>Vol+/-</span>
+            </div>
+          </div>
+        </div>
+      );
+    }
+  };
+
+  // Render content based on size
+  const renderContent = () => {
+    if (playerSize === 'small') {
+      return (
+        <div className="flex p-3">
+          <div className="h-14 w-14 rounded overflow-hidden flex-shrink-0">
+            <img 
+              src={currentSong.cover} 
+              alt={currentSong.title} 
+              className="h-full w-full object-cover"
+            />
+          </div>
+          <div className="ml-3 flex flex-col justify-center overflow-hidden w-full">
+            <h3 className="text-sm font-semibold truncate">{currentSong.title}</h3>
+            <div className="flex justify-between items-center mt-2">
+              {renderControls()}
+              <button 
+                onClick={onClose}
+                className="text-gray-400 hover:text-white transition-colors"
+                title="Close"
+              >
+                <X size={16} />
+              </button>
+            </div>
+          </div>
+        </div>
+      );
+    } else if (playerSize === 'medium') {
+      return (
+        <div className="flex p-3">
+          <div className="h-14 w-14 rounded overflow-hidden flex-shrink-0">
+            <img 
+              src={currentSong.cover} 
+              alt={currentSong.title} 
+              className="h-full w-full object-cover"
+            />
+          </div>
+          <div className="ml-3 flex flex-col justify-center overflow-hidden w-full">
+            <h3 className="text-sm font-semibold truncate">{currentSong.title}</h3>
+            <p className="text-xs text-gray-400 truncate">{currentSong.artist}</p>
+            <div className="flex justify-between items-center mt-2">
+              {renderControls()}
+              <button 
+                onClick={onClose}
+                className="text-gray-400 hover:text-white transition-colors"
+                title="Close"
+              >
+                <X size={16} />
+              </button>
+            </div>
+          </div>
+        </div>
+      );
+    } else { // large
+      return (
+        <div className="flex p-3">
+          <div className="h-14 w-14 rounded overflow-hidden flex-shrink-0">
+            <img 
+              src={currentSong.cover} 
+              alt={currentSong.title} 
+              className="h-full w-full object-cover"
+            />
+          </div>
+          <div className="ml-3 flex flex-col justify-center overflow-hidden w-full">
+            <h3 className="text-sm font-semibold truncate">{currentSong.title}</h3>
+            <p className="text-xs text-gray-400 truncate">{currentSong.artist}</p>
+            <div className="w-full mt-2 mb-2">
+              <input 
+                type="text" 
+                placeholder="Search songs..." 
+                className="w-full bg-songhunt-dark border border-gray-800 rounded px-2 py-1 text-xs"
+              />
+            </div>
+            <div className="flex justify-between items-center">
+              {renderControls()}
+              <button 
+                onClick={onClose}
+                className="text-gray-400 hover:text-white transition-colors"
+                title="Close"
+              >
+                <X size={16} />
+              </button>
+            </div>
+          </div>
+        </div>
+      );
+    }
+  };
 
   return (
     <div 
@@ -116,6 +281,8 @@ const MiniPlayer: React.FC<MiniPlayerProps> = ({ onClose, currentSong = defaultS
       style={{ 
         left: `${position.x}px`, 
         top: `${position.y}px`,
+        width: getPlayerWidth(),
+        height: '160px'
       }}
       onMouseDown={handleMouseDown}
     >
@@ -123,65 +290,19 @@ const MiniPlayer: React.FC<MiniPlayerProps> = ({ onClose, currentSong = defaultS
       <div className="drag-handle flex justify-between items-center p-2 bg-songhunt-dark">
         <div className="flex items-center space-x-2">
           <div className="w-2 h-2 rounded-full bg-songhunt-red"></div>
-          <span className="text-xs font-medium">Songhunt Mini Player</span>
+          <span className="text-xs font-medium">Songhunt Player</span>
         </div>
-        <button 
-          onClick={onClose}
-          className="text-gray-400 hover:text-white transition-colors"
-        >
-          <X size={16} />
-        </button>
-      </div>
-
-      {/* Progress bar */}
-      <div className="w-full bg-gray-800 progress-bar-height">
-        <div 
-          className="bg-songhunt-red progress-bar-height transition-all duration-300 ease-linear" 
-          style={{ width: `${progress}%` }}
-        ></div>
-      </div>
-
-      {/* Song info */}
-      <div className="flex p-3">
-        <div className="h-14 w-14 rounded overflow-hidden flex-shrink-0">
-          <img 
-            src={currentSong.cover} 
-            alt={currentSong.title} 
-            className="h-full w-full object-cover"
-          />
-        </div>
-        <div className="ml-3 flex flex-col justify-center overflow-hidden">
-          <h3 className="text-sm font-semibold truncate">{currentSong.title}</h3>
-          <p className="text-xs text-gray-400 truncate">{currentSong.artist}</p>
-          <div className="text-xs text-gray-500 mt-1">
-            {formatTime(currentTime)} / {formatTime(currentSong.duration)}
-          </div>
+        <div className="flex items-center space-x-1">
+          <ToggleGroup type="single" value={playerSize} onValueChange={(value) => value && setPlayerSize(value as 'small' | 'medium' | 'large')}>
+            <ToggleGroupItem value="small" size="sm" title="Small Player">S</ToggleGroupItem>
+            <ToggleGroupItem value="medium" size="sm" title="Medium Player">M</ToggleGroupItem>
+            <ToggleGroupItem value="large" size="sm" title="Large Player">L</ToggleGroupItem>
+          </ToggleGroup>
         </div>
       </div>
 
-      {/* Controls */}
-      <div className="flex justify-between items-center px-4 pb-3 pt-1">
-        <div className="flex items-center space-x-4">
-          <button className="text-gray-400 hover:text-white transition-colors">
-            <SkipBack size={18} />
-          </button>
-          <button 
-            onClick={() => setIsPlaying(!isPlaying)} 
-            className={cn(
-              "rounded-full p-1", 
-              "bg-songhunt-red hover:bg-red-600 transition-colors"
-            )}
-          >
-            {isPlaying ? <Pause size={18} /> : <Play size={18} />}
-          </button>
-          <button className="text-gray-400 hover:text-white transition-colors">
-            <SkipForward size={18} />
-          </button>
-        </div>
-        <button className="text-gray-400 hover:text-white transition-colors">
-          <Volume2 size={18} />
-        </button>
-      </div>
+      {/* Main content area */}
+      {renderContent()}
     </div>
   );
 };

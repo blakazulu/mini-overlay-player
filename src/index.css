@@ -49,13 +49,8 @@
 }
 
 @layer components {
-  .progress-bar-height {
-    height: 3px;
-  }
-  
   .mini-player {
     @apply fixed shadow-lg animate-scale-in;
-    width: 320px;
     z-index: 9999;
   }
   

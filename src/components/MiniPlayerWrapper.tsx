@@ -15,27 +15,27 @@ const MiniPlayerWrapper: React.FC = () => {
         <div className="fixed top-4 left-1/2 -translate-x-1/2 z-[9998] flex gap-2">
           <Button 
             size="sm" 
-            variant={currentDesign === 'cyber' ? 'default' : 'secondary'}
-            onClick={() => setDesign('cyber')}
-            className="text-xs"
+            variant={currentDesign === 'cs' ? 'default' : 'secondary'}
+            onClick={() => setDesign('cs')}
+            className="text-xs font-medium"
           >
-            Cyber
+            Counter-Strike
           </Button>
           <Button 
             size="sm" 
-            variant={currentDesign === 'neon' ? 'default' : 'secondary'}
-            onClick={() => setDesign('neon')}
-            className="text-xs"
+            variant={currentDesign === 'minecraft' ? 'default' : 'secondary'}
+            onClick={() => setDesign('minecraft')}
+            className="text-xs font-medium"
           >
-            Neon
+            Minecraft
           </Button>
           <Button 
             size="sm" 
-            variant={currentDesign === 'hologram' ? 'default' : 'secondary'}
-            onClick={() => setDesign('hologram')}
-            className="text-xs"
+            variant={currentDesign === 'fortnite' ? 'default' : 'secondary'}
+            onClick={() => setDesign('fortnite')}
+            className="text-xs font-medium"
           >
-            Hologram
+            Fortnite
           </Button>
         </div>
       )}

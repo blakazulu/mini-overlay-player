@@ -1,7 +1,7 @@
 
 import React, { createContext, useContext, useState, useCallback } from 'react';
 
-export type PlayerDesign = 'cyber' | 'neon' | 'hologram';
+export type PlayerDesign = 'cs' | 'minecraft' | 'fortnite';
 
 interface MiniPlayerContextType {
   isVisible: boolean;
@@ -17,7 +17,7 @@ const MiniPlayerContext = createContext<MiniPlayerContextType>({
   showMiniPlayer: () => {},
   hideMiniPlayer: () => {},
   toggleMiniPlayer: () => {},
-  currentDesign: 'cyber',
+  currentDesign: 'cs',
   setDesign: () => {},
 });
 
@@ -25,7 +25,7 @@ export const useMiniPlayer = () => useContext(MiniPlayerContext);
 
 export const MiniPlayerProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [isVisible, setIsVisible] = useState(false);
-  const [currentDesign, setCurrentDesign] = useState<PlayerDesign>('cyber');
+  const [currentDesign, setCurrentDesign] = useState<PlayerDesign>('cs');
 
   const showMiniPlayer = useCallback(() => setIsVisible(true), []);
   const hideMiniPlayer = useCallback(() => setIsVisible(false), []);

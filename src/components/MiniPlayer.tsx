@@ -1,9 +1,9 @@
 
 import React, { useState, useRef, useEffect } from 'react';
 import { useMiniPlayer, PlayerDesign } from '@/contexts/MiniPlayerContext';
-import CyberPlayer from './player-designs/CyberPlayer';
-import NeonPlayer from './player-designs/NeonPlayer';
-import HologramPlayer from './player-designs/HologramPlayer';
+import CSPlayer from './player-designs/CSPlayer';
+import MinecraftPlayer from './player-designs/MinecraftPlayer';
+import FortnitePlayer from './player-designs/FortnitePlayer';
 
 interface Position {
   x: number;
@@ -98,8 +98,8 @@ const MiniPlayer: React.FC<MiniPlayerProps> = ({ onClose, currentSong = defaultS
       <div className="drag-handle h-5 bg-songhunt-dark cursor-move" />
       
       {/* Render the selected player design */}
-      {currentDesign === 'cyber' && (
-        <CyberPlayer 
+      {currentDesign === 'cs' && (
+        <CSPlayer 
           onClose={onClose} 
           currentSong={currentSong} 
           isPlaying={isPlaying} 
@@ -107,8 +107,8 @@ const MiniPlayer: React.FC<MiniPlayerProps> = ({ onClose, currentSong = defaultS
         />
       )}
       
-      {currentDesign === 'neon' && (
-        <NeonPlayer 
+      {currentDesign === 'minecraft' && (
+        <MinecraftPlayer 
           onClose={onClose} 
           currentSong={currentSong} 
           isPlaying={isPlaying} 
@@ -116,8 +116,8 @@ const MiniPlayer: React.FC<MiniPlayerProps> = ({ onClose, currentSong = defaultS
         />
       )}
       
-      {currentDesign === 'hologram' && (
-        <HologramPlayer 
+      {currentDesign === 'fortnite' && (
+        <FortnitePlayer 
           onClose={onClose} 
           currentSong={currentSong} 
           isPlaying={isPlaying} 

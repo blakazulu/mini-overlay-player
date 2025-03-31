@@ -59,9 +59,38 @@
     touch-action: none;
   }
 
-  /* New player control styles */
-  .mini-player button {
+  /* Game-specific Minecraft button styles */
+  .minecraft-btn {
+    @apply border-2 border-b-4 border-r-4 border-[#555];
+    transition: all 0.1s;
+  }
+  
+  .minecraft-btn:active {
+    @apply translate-y-[2px] translate-x-[2px] border-b-2 border-r-2;
+  }
+  
+  /* Fortnite glowing effect */
+  .fortnite-glow {
     @apply relative;
+  }
+  
+  .fortnite-glow::after {
+    content: '';
+    @apply absolute inset-0 rounded-full bg-gradient-to-r from-[#fc24ff] to-[#19cdd7] opacity-0 blur-sm transition-opacity;
+  }
+  
+  .fortnite-glow:hover::after {
+    @apply opacity-100;
+  }
+  
+  /* CS-GO button effect */
+  .cs-button {
+    @apply bg-gradient-to-b from-[#303438] to-[#1a1d21] border border-[#3a3e42];
+    transition: all 0.2s;
+  }
+  
+  .cs-button:hover {
+    @apply bg-gradient-to-b from-[#383c40] to-[#252a2e] border-[#4a4e52];
   }
 }
 
@@ -70,12 +99,34 @@
     @apply bg-black/80 backdrop-blur-md border border-white/10;
   }
   
-  @keyframes scanline {
+  /* CS:GO scanline effect */
+  @keyframes cs-scanline {
     0% {
-      transform: translateY(0);
+      transform: translateY(0%);
+      opacity: 0.2;
+    }
+    50% {
+      opacity: 0;
     }
     100% {
       transform: translateY(100%);
+      opacity: 0.2;
     }
+  }
+  
+  .cs-scanline {
+    animation: cs-scanline 8s linear infinite;
+  }
+  
+  /* Minecraft pixelation */
+  .minecraft-pixelate {
+    image-rendering: pixelated;
+    image-rendering: -moz-crisp-edges;
+    image-rendering: crisp-edges;
+  }
+  
+  /* Fortnite gradient text */
+  .fortnite-text {
+    @apply bg-clip-text text-transparent bg-gradient-to-r from-[#fc24ff] via-[#4a6aff] to-[#19cdd7];
   }
 }

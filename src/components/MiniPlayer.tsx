@@ -4,6 +4,13 @@ import { useMiniPlayer, PlayerDesign } from '@/contexts/MiniPlayerContext';
 import CSPlayer from './player-designs/CSPlayer';
 import MinecraftPlayer from './player-designs/MinecraftPlayer';
 import FortnitePlayer from './player-designs/FortnitePlayer';
+import SimsPlayer from './player-designs/SimsPlayer';
+import RobloxPlayer from './player-designs/RobloxPlayer';
+import MarvelPlayer from './player-designs/MarvelPlayer';
+import LOLPlayer from './player-designs/LOLPlayer';
+import DotaPlayer from './player-designs/DotaPlayer';
+import ValorantPlayer from './player-designs/ValorantPlayer';
+import PUBGPlayer from './player-designs/PUBGPlayer';
 
 interface Position {
   x: number;
@@ -84,6 +91,41 @@ const MiniPlayer: React.FC<MiniPlayerProps> = ({ onClose, currentSong = defaultS
     };
   }, [isDragging]);
 
+  // Render the appropriate player component based on the selected design
+  const renderPlayerDesign = () => {
+    const playerProps = {
+      onClose,
+      currentSong,
+      isPlaying,
+      togglePlayback
+    };
+
+    switch (currentDesign) {
+      case 'cs':
+        return <CSPlayer {...playerProps} />;
+      case 'minecraft':
+        return <MinecraftPlayer {...playerProps} />;
+      case 'fortnite':
+        return <FortnitePlayer {...playerProps} />;
+      case 'sims':
+        return <SimsPlayer {...playerProps} />;
+      case 'roblox':
+        return <RobloxPlayer {...playerProps} />;
+      case 'marvel':
+        return <MarvelPlayer {...playerProps} />;
+      case 'lol':
+        return <LOLPlayer {...playerProps} />;
+      case 'dota':
+        return <DotaPlayer {...playerProps} />;
+      case 'valorant':
+        return <ValorantPlayer {...playerProps} />;
+      case 'pubg':
+        return <PUBGPlayer {...playerProps} />;
+      default:
+        return <CSPlayer {...playerProps} />;
+    }
+  };
+
   return (
     <div 
       ref={playerRef}
@@ -98,32 +140,7 @@ const MiniPlayer: React.FC<MiniPlayerProps> = ({ onClose, currentSong = defaultS
       <div className="drag-handle h-5 bg-songhunt-dark cursor-move" />
       
       {/* Render the selected player design */}
-      {currentDesign === 'cs' && (
-        <CSPlayer 
-          onClose={onClose} 
-          currentSong={currentSong} 
-          isPlaying={isPlaying} 
-          togglePlayback={togglePlayback} 
-        />
-      )}
-      
-      {currentDesign === 'minecraft' && (
-        <MinecraftPlayer 
-          onClose={onClose} 
-          currentSong={currentSong} 
-          isPlaying={isPlaying} 
-          togglePlayback={togglePlayback} 
-        />
-      )}
-      
-      {currentDesign === 'fortnite' && (
-        <FortnitePlayer 
-          onClose={onClose} 
-          currentSong={currentSong} 
-          isPlaying={isPlaying} 
-          togglePlayback={togglePlayback} 
-        />
-      )}
+      {renderPlayerDesign()}
     </div>
   );
 };

@@ -92,6 +92,64 @@
   .cs-button:hover {
     @apply bg-gradient-to-b from-[#383c40] to-[#252a2e] border-[#4a4e52];
   }
+
+  /* Valorant angular button */
+  .valorant-btn {
+    clip-path: polygon(10% 0, 100% 0, 100% 70%, 90% 100%, 0 100%, 0 30%);
+  }
+
+  /* League of Legends ornate border */
+  .lol-border {
+    @apply relative;
+  }
+
+  .lol-border::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: 
+      linear-gradient(to right, #c9aa58 1px, transparent 1px) 0 0,
+      linear-gradient(to right, #c9aa58 1px, transparent 1px) 0 100%,
+      linear-gradient(to left, #c9aa58 1px, transparent 1px) 100% 0,
+      linear-gradient(to left, #c9aa58 1px, transparent 1px) 100% 100%,
+      linear-gradient(to bottom, #c9aa58 1px, transparent 1px) 0 0,
+      linear-gradient(to bottom, #c9aa58 1px, transparent 1px) 100% 0,
+      linear-gradient(to top, #c9aa58 1px, transparent 1px) 0 100%,
+      linear-gradient(to top, #c9aa58 1px, transparent 1px) 100% 100%;
+    background-repeat: no-repeat;
+    background-size: 10px 10px;
+    pointer-events: none;
+  }
+
+  /* Sims plumbob effect */
+  .sims-plumbob {
+    @apply relative;
+  }
+
+  .sims-plumbob::before {
+    content: '';
+    position: absolute;
+    top: -5px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 16px;
+    height: 16px;
+    background-color: #3cba54;
+    clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
+  }
+
+  /* Marvel glowing effect */
+  .marvel-glow {
+    box-shadow: 0 0 15px rgba(237, 29, 36, 0.5);
+    transition: box-shadow 0.3s ease;
+  }
+
+  .marvel-glow:hover {
+    box-shadow: 0 0 20px rgba(237, 29, 36, 0.8);
+  }
 }
 
 @layer utilities {
@@ -128,5 +186,51 @@
   /* Fortnite gradient text */
   .fortnite-text {
     @apply bg-clip-text text-transparent bg-gradient-to-r from-[#fc24ff] via-[#4a6aff] to-[#19cdd7];
+  }
+  
+  /* PUBG military texture */
+  .pubg-texture {
+    background-image:
+      linear-gradient(#3c3c3c 1px, transparent 1px),
+      linear-gradient(90deg, #3c3c3c 1px, transparent 1px);
+    background-size: 20px 20px;
+    background-position: center center;
+  }
+
+  /* Roblox blocky text */
+  .roblox-text {
+    text-shadow: 2px 2px 0px #000;
+    letter-spacing: 0.5px;
+  }
+
+  /* Valorant diagonal stripes */
+  .valorant-stripes {
+    background-size: 10px 10px;
+    background-image: repeating-linear-gradient(
+      -45deg,
+      #ff4655,
+      #ff4655 2px,
+      transparent 2px,
+      transparent 5px
+    );
+  }
+  
+  /* Dota 2 radiant/dire effect */
+  .dota-radiant {
+    box-shadow: inset 0 0 15px rgba(114, 195, 148, 0.5);
+  }
+  
+  .dota-dire {
+    box-shadow: inset 0 0 15px rgba(168, 48, 27, 0.5);
+  }
+
+  /* The Sims 4 gradient button */
+  .sims-gradient-btn {
+    background: linear-gradient(to bottom, #4eda89, #3cba54);
+    transition: all 0.2s;
+  }
+  
+  .sims-gradient-btn:hover {
+    background: linear-gradient(to bottom, #5fecaf, #4dca63);
   }
 }

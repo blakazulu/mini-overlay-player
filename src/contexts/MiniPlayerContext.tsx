@@ -1,7 +1,7 @@
 
 import React, { createContext, useContext, useState, useCallback } from 'react';
 
-export type PlayerDesign = 'cs' | 'minecraft' | 'fortnite';
+export type PlayerDesign = 'cs' | 'minecraft' | 'fortnite' | 'sims' | 'roblox' | 'marvel' | 'lol' | 'dota' | 'valorant' | 'pubg';
 
 interface MiniPlayerContextType {
   isVisible: boolean;

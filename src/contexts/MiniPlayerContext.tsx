@@ -10,6 +10,8 @@ interface MiniPlayerContextType {
   toggleMiniPlayer: () => void;
   currentDesign: PlayerDesign;
   setDesign: (design: PlayerDesign) => void;
+  currentTime: number;
+  setCurrentTime: (time: number) => void;
 }
 
 const MiniPlayerContext = createContext<MiniPlayerContextType>({
@@ -19,6 +21,8 @@ const MiniPlayerContext = createContext<MiniPlayerContextType>({
   toggleMiniPlayer: () => {},
   currentDesign: 'cs',
   setDesign: () => {},
+  currentTime: 0,
+  setCurrentTime: () => {},
 });
 
 export const useMiniPlayer = () => useContext(MiniPlayerContext);
@@ -26,6 +30,7 @@ export const useMiniPlayer = () => useContext(MiniPlayerContext);
 export const MiniPlayerProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [isVisible, setIsVisible] = useState(false);
   const [currentDesign, setCurrentDesign] = useState<PlayerDesign>('cs');
+  const [currentTime, setCurrentTime] = useState(105); // Default to 1:45
 
   const showMiniPlayer = useCallback(() => setIsVisible(true), []);
   const hideMiniPlayer = useCallback(() => setIsVisible(false), []);
@@ -40,6 +45,8 @@ export const MiniPlayerProvider: React.FC<{ children: React.ReactNode }> = ({ ch
       toggleMiniPlayer,
       currentDesign,
       setDesign,
+      currentTime,
+      setCurrentTime,
     }}>
       {children}
     </MiniPlayerContext.Provider>

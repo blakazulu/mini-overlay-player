@@ -40,6 +40,7 @@ const MiniPlayer: React.FC<MiniPlayerProps> = ({ onClose, currentSong = defaultS
   const [isDragging, setIsDragging] = useState(false);
   const [dragOffset, setDragOffset] = useState({ x: 0, y: 0 });
   const [isPlaying, setIsPlaying] = useState(false);
+  const [currentTime, setCurrentTime] = useState(105); // 1:45 in seconds
   
   const playerRef = useRef<HTMLDivElement>(null);
 
@@ -97,7 +98,8 @@ const MiniPlayer: React.FC<MiniPlayerProps> = ({ onClose, currentSong = defaultS
       onClose,
       currentSong,
       isPlaying,
-      togglePlayback
+      togglePlayback,
+      currentTime
     };
 
     switch (currentDesign) {
@@ -129,10 +131,12 @@ const MiniPlayer: React.FC<MiniPlayerProps> = ({ onClose, currentSong = defaultS
   return (
     <div 
       ref={playerRef}
-      className="mini-player"
+      className="mini-player fixed"
       style={{ 
         left: `${position.x}px`, 
         top: `${position.y}px`,
+        width: '450px',
+        zIndex: 9999
       }}
       onMouseDown={handleMouseDown}
     >

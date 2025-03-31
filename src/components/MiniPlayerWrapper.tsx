@@ -29,7 +29,7 @@ const MiniPlayerWrapper: React.FC = () => {
       {isVisible && (
         <div className="fixed top-4 left-1/2 -translate-x-1/2 z-[9998] w-[80vw] max-w-3xl">
           <ScrollArea className="w-full">
-            <div className="flex gap-2 p-2">
+            <div className="flex gap-2 p-2 bg-black/50 backdrop-blur-md rounded-lg">
               {themes.map((theme) => (
                 <Button 
                   key={theme.id}
@@ -56,6 +56,7 @@ const MiniPlayerWrapper: React.FC = () => {
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 0.9 }}
             transition={{ duration: 0.2 }}
+            className="fixed z-[9997]"
           >
             <MiniPlayer onClose={hideMiniPlayer} />
           </motion.div>

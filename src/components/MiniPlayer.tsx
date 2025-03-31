@@ -1,10 +1,9 @@
 
 import React, { useState, useRef, useEffect } from 'react';
-import { X, Play, Pause, SkipBack, SkipForward, Volume2, ArrowLeftRight } from 'lucide-react';
+import { X, Play, Pause, SkipBack, SkipForward, Volume2, HelpCircle } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useMiniPlayer } from '@/contexts/MiniPlayerContext';
-import { Toggle } from './ui/toggle';
-import { ToggleGroup, ToggleGroupItem } from './ui/toggle-group';
+import { Input } from './ui/input';
 
 interface Position {
   x: number;
@@ -29,11 +28,11 @@ const defaultSong = {
 };
 
 const MiniPlayer: React.FC<MiniPlayerProps> = ({ onClose, currentSong = defaultSong }) => {
-  const { playerSize, setPlayerSize } = useMiniPlayer();
   const [position, setPosition] = useState<Position>({ x: 20, y: 20 });
   const [isDragging, setIsDragging] = useState(false);
   const [dragOffset, setDragOffset] = useState({ x: 0, y: 0 });
   const [isPlaying, setIsPlaying] = useState(false);
+  const [showLabels, setShowLabels] = useState(true);
   
   const playerRef = useRef<HTMLDivElement>(null);
 
@@ -81,198 +80,14 @@ const MiniPlayer: React.FC<MiniPlayerProps> = ({ onClose, currentSong = defaultS
     };
   }, [isDragging]);
 
-  // Size-specific style
-  const getPlayerWidth = () => {
-    switch (playerSize) {
-      case 'small': return '300px';
-      case 'medium': return '350px';
-      case 'large': return '450px';
-      default: return '300px';
-    }
+  // Format time in MM:SS
+  const formatTime = (seconds: number) => {
+    const min = Math.floor(seconds / 60);
+    const sec = Math.floor(seconds % 60);
+    return `${min}:${sec < 10 ? '0' : ''}${sec}`;
   };
-
-  // Determine what controls to show based on size
-  const renderControls = () => {
-    if (playerSize === 'small') {
-      return (
-        <div className="flex items-center space-x-3">
-          <button 
-            onClick={() => setIsPlaying(!isPlaying)} 
-            className="text-white hover:text-songhunt-red transition-colors"
-            title="Play/Pause (Ctrl+Space)"
-          >
-            {isPlaying ? <Pause size={18} /> : <Play size={18} />}
-          </button>
-          <button 
-            className="text-white hover:text-songhunt-red transition-colors"
-            title="Next Track (Ctrl+Right)"
-          >
-            <SkipForward size={18} />
-          </button>
-          <div className="text-xs text-gray-500 hidden md:block">Ctrl+Space</div>
-          <div className="text-xs text-gray-500 hidden md:block">Ctrl+Right</div>
-        </div>
-      );
-    } else if (playerSize === 'medium') {
-      return (
-        <div className="flex items-center space-x-3">
-          <button 
-            className="text-white hover:text-songhunt-red transition-colors"
-            title="Previous Track (Ctrl+Left)"
-          >
-            <SkipBack size={18} />
-          </button>
-          <button 
-            onClick={() => setIsPlaying(!isPlaying)} 
-            className="text-white hover:text-songhunt-red transition-colors"
-            title="Play/Pause (Ctrl+Space)"
-          >
-            {isPlaying ? <Pause size={18} /> : <Play size={18} />}
-          </button>
-          <button 
-            className="text-white hover:text-songhunt-red transition-colors"
-            title="Next Track (Ctrl+Right)"
-          >
-            <SkipForward size={18} />
-          </button>
-          <div className="flex flex-col text-xs text-gray-500 hidden md:block">
-            <div className="flex space-x-3">
-              <span>Ctrl+Left</span>
-              <span>Ctrl+Space</span>
-              <span>Ctrl+Right</span>
-            </div>
-          </div>
-        </div>
-      );
-    } else { // large
-      return (
-        <div className="flex items-center space-x-3">
-          <button 
-            className="text-white hover:text-songhunt-red transition-colors"
-            title="Previous Track (Ctrl+Left)"
-          >
-            <SkipBack size={18} />
-          </button>
-          <button 
-            onClick={() => setIsPlaying(!isPlaying)} 
-            className="text-white hover:text-songhunt-red transition-colors"
-            title="Play/Pause (Ctrl+Space)"
-          >
-            {isPlaying ? <Pause size={18} /> : <Play size={18} />}
-          </button>
-          <button 
-            className="text-white hover:text-songhunt-red transition-colors"
-            title="Next Track (Ctrl+Right)"
-          >
-            <SkipForward size={18} />
-          </button>
-          <button 
-            className="text-white hover:text-songhunt-red transition-colors"
-            title="Volume (Vol+/-)"
-          >
-            <Volume2 size={18} />
-          </button>
-          <div className="flex flex-col text-xs text-gray-500 hidden md:block">
-            <div className="flex space-x-2">
-              <span>Ctrl+Left</span>
-              <span>Ctrl+Space</span>
-              <span>Ctrl+Right</span>
-              <span>Vol+/-</span>
-            </div>
-          </div>
-        </div>
-      );
-    }
-  };
-
-  // Render content based on size
-  const renderContent = () => {
-    if (playerSize === 'small') {
-      return (
-        <div className="flex p-3">
-          <div className="h-14 w-14 rounded overflow-hidden flex-shrink-0">
-            <img 
-              src={currentSong.cover} 
-              alt={currentSong.title} 
-              className="h-full w-full object-cover"
-            />
-          </div>
-          <div className="ml-3 flex flex-col justify-center overflow-hidden w-full">
-            <h3 className="text-sm font-semibold truncate">{currentSong.title}</h3>
-            <div className="flex justify-between items-center mt-2">
-              {renderControls()}
-              <button 
-                onClick={onClose}
-                className="text-gray-400 hover:text-white transition-colors"
-                title="Close"
-              >
-                <X size={16} />
-              </button>
-            </div>
-          </div>
-        </div>
-      );
-    } else if (playerSize === 'medium') {
-      return (
-        <div className="flex p-3">
-          <div className="h-14 w-14 rounded overflow-hidden flex-shrink-0">
-            <img 
-              src={currentSong.cover} 
-              alt={currentSong.title} 
-              className="h-full w-full object-cover"
-            />
-          </div>
-          <div className="ml-3 flex flex-col justify-center overflow-hidden w-full">
-            <h3 className="text-sm font-semibold truncate">{currentSong.title}</h3>
-            <p className="text-xs text-gray-400 truncate">{currentSong.artist}</p>
-            <div className="flex justify-between items-center mt-2">
-              {renderControls()}
-              <button 
-                onClick={onClose}
-                className="text-gray-400 hover:text-white transition-colors"
-                title="Close"
-              >
-                <X size={16} />
-              </button>
-            </div>
-          </div>
-        </div>
-      );
-    } else { // large
-      return (
-        <div className="flex p-3">
-          <div className="h-14 w-14 rounded overflow-hidden flex-shrink-0">
-            <img 
-              src={currentSong.cover} 
-              alt={currentSong.title} 
-              className="h-full w-full object-cover"
-            />
-          </div>
-          <div className="ml-3 flex flex-col justify-center overflow-hidden w-full">
-            <h3 className="text-sm font-semibold truncate">{currentSong.title}</h3>
-            <p className="text-xs text-gray-400 truncate">{currentSong.artist}</p>
-            <div className="w-full mt-2 mb-2">
-              <input 
-                type="text" 
-                placeholder="Search songs..." 
-                className="w-full bg-songhunt-dark border border-gray-800 rounded px-2 py-1 text-xs"
-              />
-            </div>
-            <div className="flex justify-between items-center">
-              {renderControls()}
-              <button 
-                onClick={onClose}
-                className="text-gray-400 hover:text-white transition-colors"
-                title="Close"
-              >
-                <X size={16} />
-              </button>
-            </div>
-          </div>
-        </div>
-      );
-    }
-  };
+  
+  const currentTime = '1:45';
 
   return (
     <div 
@@ -281,7 +96,7 @@ const MiniPlayer: React.FC<MiniPlayerProps> = ({ onClose, currentSong = defaultS
       style={{ 
         left: `${position.x}px`, 
         top: `${position.y}px`,
-        width: getPlayerWidth(),
+        width: '450px',
         height: '160px'
       }}
       onMouseDown={handleMouseDown}
@@ -292,17 +107,95 @@ const MiniPlayer: React.FC<MiniPlayerProps> = ({ onClose, currentSong = defaultS
           <div className="w-2 h-2 rounded-full bg-songhunt-red"></div>
           <span className="text-xs font-medium">Songhunt Player</span>
         </div>
-        <div className="flex items-center space-x-1">
-          <ToggleGroup type="single" value={playerSize} onValueChange={(value) => value && setPlayerSize(value as 'small' | 'medium' | 'large')}>
-            <ToggleGroupItem value="small" size="sm" title="Small Player">S</ToggleGroupItem>
-            <ToggleGroupItem value="medium" size="sm" title="Medium Player">M</ToggleGroupItem>
-            <ToggleGroupItem value="large" size="sm" title="Large Player">L</ToggleGroupItem>
-          </ToggleGroup>
+        <div className="flex items-center space-x-2">
+          <button 
+            onClick={() => setShowLabels(!showLabels)} 
+            className="text-gray-400 hover:text-white transition-colors"
+            title="Toggle Labels"
+          >
+            <HelpCircle size={16} />
+          </button>
+          <button 
+            onClick={onClose}
+            className="text-gray-400 hover:text-white transition-colors"
+            title="Close"
+          >
+            <X size={16} />
+          </button>
         </div>
       </div>
 
       {/* Main content area */}
-      {renderContent()}
+      <div className="p-3 flex flex-col">
+        {/* Search bar - full width */}
+        <div className="w-full mb-3">
+          <Input 
+            type="text" 
+            placeholder="Search songs..." 
+            className="w-full bg-songhunt-dark border border-gray-800 text-xs h-8"
+          />
+        </div>
+        
+        <div className="flex flex-1">
+          {/* Album artwork - left side */}
+          <div className="h-20 w-20 rounded overflow-hidden flex-shrink-0">
+            <img 
+              src={currentSong.cover} 
+              alt={currentSong.title} 
+              className="h-full w-full object-cover"
+            />
+          </div>
+          
+          {/* Right side content - song info */}
+          <div className="ml-3 flex flex-col justify-between flex-1">
+            <div>
+              <h3 className="text-sm font-semibold truncate">{currentSong.title}</h3>
+              <p className="text-xs text-gray-400 truncate">{currentSong.artist}</p>
+            </div>
+            
+            {/* Timestamp */}
+            <div className="text-xs text-gray-500 self-end">
+              {currentTime} / {formatTime(currentSong.duration)}
+            </div>
+          </div>
+        </div>
+        
+        {/* Controls at bottom - spread across */}
+        <div className="flex justify-between items-center mt-4">
+          <button 
+            className="text-white hover:text-songhunt-red transition-colors"
+            title="Previous Track (Ctrl+Left)"
+          >
+            <SkipBack size={20} />
+            {showLabels && <span className="absolute -top-5 text-xs text-gray-500">Ctrl+Left</span>}
+          </button>
+          
+          <button 
+            onClick={() => setIsPlaying(!isPlaying)} 
+            className="text-white hover:text-songhunt-red transition-colors"
+            title="Play/Pause (Ctrl+Space)"
+          >
+            {isPlaying ? <Pause size={20} /> : <Play size={20} />}
+            {showLabels && <span className="absolute -top-5 text-xs text-gray-500">Ctrl+Space</span>}
+          </button>
+          
+          <button 
+            className="text-white hover:text-songhunt-red transition-colors"
+            title="Next Track (Ctrl+Right)"
+          >
+            <SkipForward size={20} />
+            {showLabels && <span className="absolute -top-5 text-xs text-gray-500">Ctrl+Right</span>}
+          </button>
+          
+          <button 
+            className="text-white hover:text-songhunt-red transition-colors"
+            title="Volume (Vol+/-)"
+          >
+            <Volume2 size={20} />
+            {showLabels && <span className="absolute -top-5 text-xs text-gray-500">Vol+/-</span>}
+          </button>
+        </div>
+      </div>
     </div>
   );
 };

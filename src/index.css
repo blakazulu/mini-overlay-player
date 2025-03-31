@@ -58,6 +58,11 @@
     @apply cursor-move;
     touch-action: none;
   }
+
+  /* New player control styles */
+  .mini-player button {
+    @apply relative;
+  }
 }
 
 @layer utilities {

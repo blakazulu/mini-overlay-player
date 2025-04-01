@@ -1,7 +1,22 @@
 
 import React, { createContext, useContext, useState, useCallback } from 'react';
 
-export type PlayerDesign = 'cs' | 'minecraft' | 'fortnite' | 'sims' | 'roblox' | 'marvel' | 'lol' | 'dota' | 'valorant' | 'pubg';
+export type PlayerDesign = 
+  | 'fortnite' 
+  | 'csgo' 
+  | 'lol' 
+  | 'tarkov' 
+  | 'minecraft' 
+  | 'overwatch' 
+  | 'pubg' 
+  | 'rainbow6' 
+  | 'splitgate' 
+  | 'pathofexile' 
+  | 'valorant' 
+  | 'dota' 
+  | 'warzone' 
+  | 'rocketleague' 
+  | 'warframe';
 
 interface MiniPlayerContextType {
   isVisible: boolean;
@@ -19,7 +34,7 @@ const MiniPlayerContext = createContext<MiniPlayerContextType>({
   showMiniPlayer: () => {},
   hideMiniPlayer: () => {},
   toggleMiniPlayer: () => {},
-  currentDesign: 'cs',
+  currentDesign: 'csgo',
   setDesign: () => {},
   currentTime: 0,
   setCurrentTime: () => {},
@@ -29,7 +44,7 @@ export const useMiniPlayer = () => useContext(MiniPlayerContext);
 
 export const MiniPlayerProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [isVisible, setIsVisible] = useState(false);
-  const [currentDesign, setCurrentDesign] = useState<PlayerDesign>('cs');
+  const [currentDesign, setCurrentDesign] = useState<PlayerDesign>('csgo');
   const [currentTime, setCurrentTime] = useState(105); // Default to 1:45
 
   const showMiniPlayer = useCallback(() => setIsVisible(true), []);

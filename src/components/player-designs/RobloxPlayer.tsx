@@ -2,6 +2,7 @@
 import React from 'react';
 import { X, Play, Pause, SkipBack, SkipForward, Volume2, HelpCircle, Search } from 'lucide-react';
 import { Input } from '../ui/input';
+import { Slider } from '../ui/slider';
 
 interface PlayerProps {
   onClose: () => void;
@@ -14,18 +15,21 @@ interface PlayerProps {
   isPlaying: boolean;
   togglePlayback: () => void;
   currentTime: number;
+  progressPercentage: number;
+  formatTime: (seconds: number) => string;
+  handleProgressChange: (value: number[]) => void;
 }
 
-const RobloxPlayer: React.FC<PlayerProps> = ({ onClose, currentSong, isPlaying, togglePlayback, currentTime }) => {
-  // Format time in MM:SS
-  const formatTime = (seconds: number) => {
-    const min = Math.floor(seconds / 60);
-    const sec = Math.floor(seconds % 60);
-    return `${min}:${sec < 10 ? '0' : ''}${sec}`;
-  };
-  
-  const progressPercentage = (currentTime / currentSong.duration) * 100;
-
+const RobloxPlayer: React.FC<PlayerProps> = ({ 
+  onClose, 
+  currentSong, 
+  isPlaying, 
+  togglePlayback, 
+  currentTime,
+  progressPercentage,
+  formatTime,
+  handleProgressChange 
+}) => {
   return (
     <div className="w-[450px] h-[200px] bg-[#f2f2f2] rounded-md overflow-hidden relative">
       {/* Roblox style UI - gray with red accents */}
@@ -94,21 +98,25 @@ const RobloxPlayer: React.FC<PlayerProps> = ({ onClose, currentSong, isPlaying, 
                 <Volume2 size={18} />
               </button>
             </div>
-            
-            {/* Progress bar */}
-            <div className="relative h-2 bg-[#cccccc] rounded-sm overflow-hidden mb-1">
-              <div 
-                className="absolute top-0 left-0 h-full bg-[#f25f5c]" 
-                style={{ width: `${progressPercentage}%` }}
-              ></div>
-            </div>
           </div>
         </div>
         
-        {/* Time display */}
-        <div className="flex justify-end">
-          <div className="bg-white text-xs font-bold text-[#393b3d] px-2 py-0.5 rounded border border-[#cccccc]">
-            {formatTime(currentTime)} / {formatTime(currentSong.duration)}
+        {/* Progress bar and timestamps at bottom */}
+        <div className="mt-3 space-y-1">
+          <Slider
+            value={[progressPercentage]}
+            max={100}
+            step={1}
+            onValueChange={handleProgressChange}
+            className="h-1.5"
+          />
+          <div className="flex justify-between">
+            <div className="text-xs font-bold text-[#393b3d]">
+              {formatTime(currentTime)}
+            </div>
+            <div className="text-xs font-bold text-[#393b3d]">
+              {formatTime(currentSong.duration)}
+            </div>
           </div>
         </div>
       </div>

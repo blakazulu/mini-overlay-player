@@ -2,6 +2,7 @@
 import React from 'react';
 import { X, Play, Pause, SkipBack, SkipForward, Volume2, HelpCircle, Search } from 'lucide-react';
 import { Input } from '../ui/input';
+import { Slider } from '../ui/slider';
 
 interface PlayerProps {
   onClose: () => void;
@@ -14,18 +15,21 @@ interface PlayerProps {
   isPlaying: boolean;
   togglePlayback: () => void;
   currentTime: number;
+  progressPercentage: number;
+  formatTime: (seconds: number) => string;
+  handleProgressChange: (value: number[]) => void;
 }
 
-const SimsPlayer: React.FC<PlayerProps> = ({ onClose, currentSong, isPlaying, togglePlayback, currentTime }) => {
-  // Format time in MM:SS
-  const formatTime = (seconds: number) => {
-    const min = Math.floor(seconds / 60);
-    const sec = Math.floor(seconds % 60);
-    return `${min}:${sec < 10 ? '0' : ''}${sec}`;
-  };
-  
-  const progressPercentage = (currentTime / currentSong.duration) * 100;
-
+const SimsPlayer: React.FC<PlayerProps> = ({ 
+  onClose, 
+  currentSong, 
+  isPlaying, 
+  togglePlayback, 
+  currentTime,
+  progressPercentage,
+  formatTime,
+  handleProgressChange
+}) => {
   return (
     <div className="w-[450px] h-[200px] bg-gradient-to-br from-[#9be7ff] to-[#4fc3f7] rounded-xl overflow-hidden relative">
       {/* The Sims style UI - clean, light, with Plumbob green accents */}
@@ -95,21 +99,25 @@ const SimsPlayer: React.FC<PlayerProps> = ({ onClose, currentSong, isPlaying, to
                 <Volume2 size={18} />
               </button>
             </div>
-            
-            {/* Progress bar */}
-            <div className="relative h-2 bg-white/50 rounded-full overflow-hidden mb-1">
-              <div 
-                className="absolute top-0 left-0 h-full bg-[#3cba54]" 
-                style={{ width: `${progressPercentage}%` }}
-              ></div>
-            </div>
           </div>
         </div>
         
-        {/* Time display */}
-        <div className="flex justify-end">
-          <div className="bg-white/80 text-xs text-[#1a237e] font-medium px-2 py-0.5 rounded-lg">
-            {formatTime(currentTime)} / {formatTime(currentSong.duration)}
+        {/* Progress bar and timestamps at bottom */}
+        <div className="mt-3 space-y-1">
+          <Slider
+            value={[progressPercentage]}
+            max={100}
+            step={1}
+            onValueChange={handleProgressChange}
+            className="h-1.5"
+          />
+          <div className="flex justify-between">
+            <div className="text-xs text-[#1a237e] font-medium">
+              {formatTime(currentTime)}
+            </div>
+            <div className="text-xs text-[#1a237e] font-medium">
+              {formatTime(currentSong.duration)}
+            </div>
           </div>
         </div>
       </div>

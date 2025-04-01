@@ -11,6 +11,8 @@ import LOLPlayer from './player-designs/LOLPlayer';
 import DotaPlayer from './player-designs/DotaPlayer';
 import ValorantPlayer from './player-designs/ValorantPlayer';
 import PUBGPlayer from './player-designs/PUBGPlayer';
+import { Progress } from './ui/progress';
+import { Slider } from './ui/slider';
 
 interface Position {
   x: number;
@@ -35,12 +37,11 @@ const defaultSong = {
 };
 
 const MiniPlayer: React.FC<MiniPlayerProps> = ({ onClose, currentSong = defaultSong }) => {
-  const { currentDesign } = useMiniPlayer();
+  const { currentDesign, currentTime, setCurrentTime } = useMiniPlayer();
   const [position, setPosition] = useState<Position>({ x: 20, y: 20 });
   const [isDragging, setIsDragging] = useState(false);
   const [dragOffset, setDragOffset] = useState({ x: 0, y: 0 });
   const [isPlaying, setIsPlaying] = useState(false);
-  const [currentTime, setCurrentTime] = useState(105); // 1:45 in seconds
   
   const playerRef = useRef<HTMLDivElement>(null);
 
@@ -77,6 +78,11 @@ const MiniPlayer: React.FC<MiniPlayerProps> = ({ onClose, currentSong = defaultS
     setIsPlaying(!isPlaying);
   };
 
+  const handleProgressChange = (value: number[]) => {
+    const newTime = Math.round((value[0] / 100) * currentSong.duration);
+    setCurrentTime(newTime);
+  };
+
   useEffect(() => {
     if (isDragging) {
       window.addEventListener('mousemove', handleMouseMove);
@@ -92,6 +98,16 @@ const MiniPlayer: React.FC<MiniPlayerProps> = ({ onClose, currentSong = defaultS
     };
   }, [isDragging]);
 
+  // Calculate progress percentage
+  const progressPercentage = (currentTime / currentSong.duration) * 100;
+
+  // Format time in MM:SS
+  const formatTime = (seconds: number) => {
+    const min = Math.floor(seconds / 60);
+    const sec = Math.floor(seconds % 60);
+    return `${min}:${sec < 10 ? '0' : ''}${sec}`;
+  };
+
   // Render the appropriate player component based on the selected design
   const renderPlayerDesign = () => {
     const playerProps = {
@@ -99,30 +115,30 @@ const MiniPlayer: React.FC<MiniPlayerProps> = ({ onClose, currentSong = defaultS
       currentSong,
       isPlaying,
       togglePlayback,
-      currentTime
+      currentTime,
+      progressPercentage,
+      formatTime,
+      handleProgressChange
     };
 
+    // We'll need to update the existing player components and create new ones
+    // For now, we'll return the existing ones with a fallback to CS
     switch (currentDesign) {
-      case 'cs':
+      case 'csgo':
         return <CSPlayer {...playerProps} />;
       case 'minecraft':
         return <MinecraftPlayer {...playerProps} />;
       case 'fortnite':
         return <FortnitePlayer {...playerProps} />;
-      case 'sims':
-        return <SimsPlayer {...playerProps} />;
-      case 'roblox':
-        return <RobloxPlayer {...playerProps} />;
-      case 'marvel':
-        return <MarvelPlayer {...playerProps} />;
-      case 'lol':
-        return <LOLPlayer {...playerProps} />;
-      case 'dota':
-        return <DotaPlayer {...playerProps} />;
       case 'valorant':
         return <ValorantPlayer {...playerProps} />;
       case 'pubg':
         return <PUBGPlayer {...playerProps} />;
+      case 'lol':
+        return <LOLPlayer {...playerProps} />;
+      case 'dota':
+        return <DotaPlayer {...playerProps} />;
+      // For designs we haven't implemented yet, fallback to CS
       default:
         return <CSPlayer {...playerProps} />;
     }

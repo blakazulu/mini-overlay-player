@@ -2,6 +2,7 @@
 import React from 'react';
 import { X, Play, Pause, SkipBack, SkipForward, Volume2 } from 'lucide-react';
 import { Input } from '../ui/input';
+import { Slider } from '../ui/slider';
 
 interface PlayerProps {
   onClose: () => void;
@@ -13,18 +14,22 @@ interface PlayerProps {
   };
   isPlaying: boolean;
   togglePlayback: () => void;
+  currentTime: number;
+  progressPercentage: number;
+  formatTime: (seconds: number) => string;
+  handleProgressChange: (value: number[]) => void;
 }
 
-const ValorantPlayer: React.FC<PlayerProps> = ({ onClose, currentSong, isPlaying, togglePlayback }) => {
-  // Format time in MM:SS
-  const formatTime = (seconds: number) => {
-    const min = Math.floor(seconds / 60);
-    const sec = Math.floor(seconds % 60);
-    return `${min}:${sec < 10 ? '0' : ''}${sec}`;
-  };
-  
-  const currentTime = '1:45';
-
+const ValorantPlayer: React.FC<PlayerProps> = ({ 
+  onClose, 
+  currentSong, 
+  isPlaying, 
+  togglePlayback,
+  currentTime,
+  progressPercentage,
+  formatTime,
+  handleProgressChange
+}) => {
   return (
     <div className="w-[450px] h-[200px] bg-[#0f1923] overflow-hidden relative">
       {/* Valorant style UI - minimalistic with accent on clean lines */}
@@ -54,12 +59,6 @@ const ValorantPlayer: React.FC<PlayerProps> = ({ onClose, currentSong, isPlaying
                 alt={currentSong.title} 
                 className="h-full w-full object-cover"
               />
-            </div>
-            
-            {/* Timestamp overlay */}
-            <div className="absolute bottom-0 left-0 right-0 text-xs font-mono font-bold bg-[#0f1923]/90 text-[#ece8e1] px-2 py-1 flex justify-between z-20">
-              <span>{currentTime}</span>
-              <span>{formatTime(currentSong.duration)}</span>
             </div>
           </div>
           
@@ -98,6 +97,23 @@ const ValorantPlayer: React.FC<PlayerProps> = ({ onClose, currentSong, isPlaying
                 <X size={20} />
               </button>
             </div>
+          </div>
+        </div>
+        
+        {/* Progress bar and timestamps at bottom */}
+        <div className="mt-3 space-y-1">
+          <div className="relative">
+            <Slider
+              value={[progressPercentage]}
+              max={100}
+              step={1}
+              onValueChange={handleProgressChange}
+              className="h-1"
+            />
+          </div>
+          <div className="flex justify-between text-xs text-[#ece8e1]/70">
+            <span>{formatTime(currentTime)}</span>
+            <span>{formatTime(currentSong.duration)}</span>
           </div>
         </div>
       </div>

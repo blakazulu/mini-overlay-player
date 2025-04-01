@@ -3,6 +3,7 @@ import React from 'react';
 import { X, Play, Pause, SkipBack, SkipForward, Volume2, Search, HelpCircle } from 'lucide-react';
 import { Input } from '../ui/input';
 import { cn } from '@/lib/utils';
+import { Slider } from '../ui/slider';
 
 interface PlayerProps {
   onClose: () => void;
@@ -15,18 +16,21 @@ interface PlayerProps {
   isPlaying: boolean;
   togglePlayback: () => void;
   currentTime: number;
+  progressPercentage: number;
+  formatTime: (seconds: number) => string;
+  handleProgressChange: (value: number[]) => void;
 }
 
-const CSPlayer: React.FC<PlayerProps> = ({ onClose, currentSong, isPlaying, togglePlayback, currentTime }) => {
-  // Format time in MM:SS
-  const formatTime = (seconds: number) => {
-    const min = Math.floor(seconds / 60);
-    const sec = Math.floor(seconds % 60);
-    return `${min}:${sec < 10 ? '0' : ''}${sec}`;
-  };
-
-  const progressPercentage = (currentTime / currentSong.duration) * 100;
-  
+const CSPlayer: React.FC<PlayerProps> = ({ 
+  onClose, 
+  currentSong, 
+  isPlaying, 
+  togglePlayback, 
+  currentTime,
+  progressPercentage,
+  formatTime,
+  handleProgressChange
+}) => {
   return (
     <div className="w-[450px] h-[200px] bg-[#1b1e22] border border-[#2d322f] overflow-hidden relative">
       {/* CS-style UI */}
@@ -56,15 +60,36 @@ const CSPlayer: React.FC<PlayerProps> = ({ onClose, currentSong, isPlaying, togg
           </button>
         </div>
         
-        {/* Main player layout */}
         <div className="flex gap-3 flex-1">
-          {/* Album artwork - left side */}
-          <div className="h-[110px] w-[110px] border border-[#36383a] overflow-hidden flex-shrink-0 relative">
-            <img 
-              src={currentSong.cover} 
-              alt={currentSong.title} 
-              className="h-full w-full object-cover"
-            />
+          {/* Album artwork and controls */}
+          <div className="flex flex-col gap-2">
+            {/* Album artwork - left side */}
+            <div className="h-[110px] w-[110px] border border-[#36383a] overflow-hidden flex-shrink-0 relative">
+              <img 
+                src={currentSong.cover} 
+                alt={currentSong.title} 
+                className="h-full w-full object-cover"
+              />
+            </div>
+            
+            {/* Progress bar and timestamps below cover art */}
+            <div className="w-[110px]">
+              <Slider
+                value={[progressPercentage]}
+                max={100}
+                step={1}
+                onValueChange={handleProgressChange}
+                className="h-1 mb-1"
+              />
+              <div className="flex justify-between">
+                <span className="text-xs text-[#f7b740] font-mono">
+                  {formatTime(currentTime)}
+                </span>
+                <span className="text-xs text-[#6d7379] font-mono">
+                  {formatTime(currentSong.duration)}
+                </span>
+              </div>
+            </div>
           </div>
           
           {/* Right side content */}
@@ -96,21 +121,6 @@ const CSPlayer: React.FC<PlayerProps> = ({ onClose, currentSong, isPlaying, togg
                 <Volume2 size={20} />
               </button>
             </div>
-            
-            {/* Progress bar */}
-            <div className="relative h-1.5 bg-[#15191c] w-full mb-1">
-              <div 
-                className="absolute top-0 left-0 h-full bg-[#f7b740]" 
-                style={{ width: `${progressPercentage}%` }}
-              ></div>
-            </div>
-          </div>
-        </div>
-        
-        {/* Time display */}
-        <div className="flex justify-end">
-          <div className="bg-[#15191c] text-xs text-[#f7b740] font-mono px-2 py-0.5 rounded-sm border border-[#36383a]">
-            {formatTime(currentTime)} / {formatTime(currentSong.duration)}
           </div>
         </div>
       </div>

@@ -121,8 +121,6 @@ const MiniPlayer: React.FC<MiniPlayerProps> = ({ onClose, currentSong = defaultS
       handleProgressChange
     };
 
-    // We'll need to update the existing player components and create new ones
-    // For now, we'll return the existing ones with a fallback to CS
     switch (currentDesign) {
       case 'csgo':
         return <CSPlayer {...playerProps} />;
@@ -138,7 +136,23 @@ const MiniPlayer: React.FC<MiniPlayerProps> = ({ onClose, currentSong = defaultS
         return <LOLPlayer {...playerProps} />;
       case 'dota':
         return <DotaPlayer {...playerProps} />;
-      // For designs we haven't implemented yet, fallback to CS
+      case 'rocketleague':
+        return <RobloxPlayer {...playerProps} />; // Using Roblox design for Rocket League for now
+      case 'warframe':
+        return <SimsPlayer {...playerProps} />; // Using Sims design for Warframe for now
+      case 'tarkov':
+        return <CSPlayer {...playerProps} />; // Fallback to CS design
+      case 'overwatch':
+        return <ValorantPlayer {...playerProps} />; // Using Valorant design for Overwatch
+      case 'rainbow6':
+        return <CSPlayer {...playerProps} />; // Using CS design for Rainbow Six
+      case 'splitgate':
+        return <ValorantPlayer {...playerProps} />; // Using Valorant design for Splitgate
+      case 'pathofexile':
+        return <DotaPlayer {...playerProps} />; // Using Dota design for Path of Exile
+      case 'warzone':
+        return <PUBGPlayer {...playerProps} />; // Using PUBG design for Warzone
+      // Default fallback to CS
       default:
         return <CSPlayer {...playerProps} />;
     }

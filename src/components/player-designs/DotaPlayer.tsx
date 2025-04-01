@@ -1,7 +1,8 @@
 
 import React from 'react';
-import { X, Play, Pause, SkipBack, SkipForward, Volume2 } from 'lucide-react';
+import { X, Play, Pause, SkipBack, SkipForward, Volume2, Search } from 'lucide-react';
 import { Input } from '../ui/input';
+import { Slider } from '../ui/slider';
 
 interface PlayerProps {
   onClose: () => void;
@@ -13,18 +14,22 @@ interface PlayerProps {
   };
   isPlaying: boolean;
   togglePlayback: () => void;
+  currentTime: number;
+  progressPercentage: number;
+  formatTime: (seconds: number) => string;
+  handleProgressChange: (value: number[]) => void;
 }
 
-const DotaPlayer: React.FC<PlayerProps> = ({ onClose, currentSong, isPlaying, togglePlayback }) => {
-  // Format time in MM:SS
-  const formatTime = (seconds: number) => {
-    const min = Math.floor(seconds / 60);
-    const sec = Math.floor(seconds % 60);
-    return `${min}:${sec < 10 ? '0' : ''}${sec}`;
-  };
-  
-  const currentTime = '1:45';
-
+const DotaPlayer: React.FC<PlayerProps> = ({ 
+  onClose, 
+  currentSong, 
+  isPlaying, 
+  togglePlayback,
+  currentTime,
+  progressPercentage,
+  formatTime,
+  handleProgressChange
+}) => {
   return (
     <div className="w-[450px] h-[200px] bg-[#15191e] overflow-hidden relative">
       {/* Dota 2 style UI - dark with red accents */}
@@ -44,22 +49,34 @@ const DotaPlayer: React.FC<PlayerProps> = ({ onClose, currentSong, isPlaying, to
         </div>
         
         <div className="flex flex-1 gap-3">
-          {/* Album artwork - left side */}
-          <div className="h-28 w-28 overflow-hidden flex-shrink-0 relative border border-[#444b55]">
-            <div className="absolute inset-0 overflow-hidden">
-              <img 
-                src={currentSong.cover} 
-                alt={currentSong.title} 
-                className="h-full w-full object-cover"
-              />
-              
-              <div className="absolute inset-0 bg-gradient-to-br from-[#a8301b]/10 to-transparent"></div>
+          {/* Album artwork and progress section */}
+          <div className="flex flex-col gap-2">
+            {/* Album artwork - left side */}
+            <div className="h-28 w-28 overflow-hidden flex-shrink-0 relative border border-[#444b55]">
+              <div className="absolute inset-0 overflow-hidden">
+                <img 
+                  src={currentSong.cover} 
+                  alt={currentSong.title} 
+                  className="h-full w-full object-cover"
+                />
+                
+                <div className="absolute inset-0 bg-gradient-to-br from-[#a8301b]/10 to-transparent"></div>
+              </div>
             </div>
             
-            {/* Timestamp overlay */}
-            <div className="absolute bottom-0 left-0 right-0 text-xs font-mono bg-[#0d1016]/90 text-[#ede8df] px-2 py-1 flex justify-between">
-              <span>{currentTime}</span>
-              <span>{formatTime(currentSong.duration)}</span>
+            {/* Progress bar below cover art */}
+            <div className="w-28">
+              <Slider
+                value={[progressPercentage]}
+                max={100}
+                step={1}
+                onValueChange={handleProgressChange}
+                className="h-1 mb-1"
+              />
+              <div className="flex justify-between text-xs font-mono">
+                <span className="text-[#ede8df]">{formatTime(currentTime)}</span>
+                <span className="text-[#7d8594]">{formatTime(currentSong.duration)}</span>
+              </div>
             </div>
           </div>
           

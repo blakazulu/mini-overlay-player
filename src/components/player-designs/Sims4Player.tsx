@@ -62,33 +62,12 @@ const Sims4Player: React.FC<PlayerProps> = ({
         {/* Main player layout */}
         <div className="flex gap-3 flex-1">
           {/* Album artwork - left side */}
-          <div className="flex flex-col gap-2">
-            <div className="h-[110px] w-[110px] overflow-hidden flex-shrink-0 relative rounded-lg border-2 border-white">
-              <img 
-                src={currentSong.cover} 
-                alt={currentSong.title} 
-                className="h-full w-full object-cover"
-              />
-            </div>
-            
-            {/* Progress bar and timestamps below cover art */}
-            <div className="w-[110px]">
-              <Slider
-                value={[progressPercentage]}
-                max={100}
-                step={1}
-                onValueChange={handleProgressChange}
-                className="h-1.5 mb-1"
-              />
-              <div className="flex justify-between">
-                <span className="text-xs text-[#1a237e]">
-                  {formatTime(currentTime)}
-                </span>
-                <span className="text-xs text-[#455a64]">
-                  {formatTime(currentSong.duration)}
-                </span>
-              </div>
-            </div>
+          <div className="h-[110px] w-[110px] overflow-hidden flex-shrink-0 relative rounded-lg border-2 border-white">
+            <img 
+              src={currentSong.cover} 
+              alt={currentSong.title} 
+              className="h-full w-full object-cover"
+            />
           </div>
           
           {/* Right side content */}
@@ -121,6 +100,22 @@ const Sims4Player: React.FC<PlayerProps> = ({
               <button className="text-[#455a64] hover:text-[#3cba54] transition-colors">
                 <Volume2 size={18} />
               </button>
+            </div>
+          </div>
+        </div>
+        
+        {/* Progress bar and timestamps at bottom */}
+        <div className="mt-3 space-y-1">
+          <div className="flex items-center gap-2">
+            <Slider
+              value={[progressPercentage]}
+              max={100}
+              step={1}
+              onValueChange={handleProgressChange}
+              className="h-1.5 flex-grow"
+            />
+            <div className="text-xs bg-white/80 text-[#1a237e] px-2 py-1 rounded-lg">
+              {formatTime(currentTime)}/{formatTime(currentSong.duration)}
             </div>
           </div>
         </div>

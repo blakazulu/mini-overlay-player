@@ -1,7 +1,8 @@
 
 import React from 'react';
-import { X, Play, Pause, SkipBack, SkipForward, Volume2 } from 'lucide-react';
+import { X, Play, Pause, SkipBack, SkipForward, Volume2, HelpCircle, Search } from 'lucide-react';
 import { Input } from '../ui/input';
+import { Slider } from '../ui/slider';
 
 interface PlayerProps {
   onClose: () => void;
@@ -13,18 +14,22 @@ interface PlayerProps {
   };
   isPlaying: boolean;
   togglePlayback: () => void;
+  currentTime: number;
+  progressPercentage: number;
+  formatTime: (seconds: number) => string;
+  handleProgressChange: (value: number[]) => void;
 }
 
-const PUBGPlayer: React.FC<PlayerProps> = ({ onClose, currentSong, isPlaying, togglePlayback }) => {
-  // Format time in MM:SS
-  const formatTime = (seconds: number) => {
-    const min = Math.floor(seconds / 60);
-    const sec = Math.floor(seconds % 60);
-    return `${min}:${sec < 10 ? '0' : ''}${sec}`;
-  };
-  
-  const currentTime = '1:45';
-
+const PUBGPlayer: React.FC<PlayerProps> = ({ 
+  onClose, 
+  currentSong, 
+  isPlaying, 
+  togglePlayback,
+  currentTime,
+  progressPercentage,
+  formatTime,
+  handleProgressChange
+}) => {
   return (
     <div className="w-[450px] h-[200px] bg-[#2b2b2b] overflow-hidden relative">
       {/* PUBG style UI - military style with angular elements */}
@@ -36,16 +41,25 @@ const PUBGPlayer: React.FC<PlayerProps> = ({ onClose, currentSong, isPlaying, to
       
       {/* Main content */}
       <div className="relative z-10 p-4 flex flex-col h-full">
-        {/* Search bar - full width */}
-        <div className="w-full mb-3">
-          <div className="relative">
+        {/* Search bar with info and close buttons */}
+        <div className="flex items-center gap-2 mb-3">
+          <div className="relative flex-1">
+            <Search size={16} className="absolute left-2 top-1/2 -translate-y-1/2 text-[#7a7a7a]" />
             <Input 
               type="text" 
-              placeholder="Search tracks..."
-              className="w-full bg-[#222222] border border-[#3c3c3c] text-xs h-8 text-[#d5d5d5] placeholder:text-[#7a7a7a] rounded-none"
+              placeholder="SEARCH TRACKS"
+              className="w-full bg-[#222222] border border-[#3c3c3c] text-xs h-8 pl-8 text-[#d5d5d5] placeholder:text-[#7a7a7a] rounded-none"
             />
-            <div className="absolute right-2 top-1/2 -translate-y-1/2 text-[#f1af34] text-xs font-mono">SEARCH</div>
           </div>
+          <button className="text-[#7a7a7a] hover:text-[#f1af34] transition-colors bg-[#222222] border border-[#3c3c3c] p-1 rounded-none h-8 w-8 flex items-center justify-center">
+            <HelpCircle size={16} />
+          </button>
+          <button 
+            onClick={onClose}
+            className="text-[#7a7a7a] hover:text-[#f1af34] transition-colors bg-[#222222] border border-[#3c3c3c] p-1 rounded-none h-8 w-8 flex items-center justify-center"
+          >
+            <X size={16} />
+          </button>
         </div>
         
         <div className="flex flex-1 gap-3">
@@ -57,19 +71,13 @@ const PUBGPlayer: React.FC<PlayerProps> = ({ onClose, currentSong, isPlaying, to
                 alt={currentSong.title} 
                 className="h-full w-full object-cover"
               />
-              
               <div className="absolute inset-0 bg-gradient-to-b from-transparent to-[#000]/40"></div>
-            </div>
-            
-            {/* Timestamp overlay */}
-            <div className="absolute bottom-0 left-0 right-0 text-xs font-mono bg-[#111]/80 text-[#f1af34] px-2 py-1 flex justify-between">
-              <span>{currentTime}</span>
-              <span>{formatTime(currentSong.duration)}</span>
             </div>
           </div>
           
           {/* Right side content */}
           <div className="flex flex-col justify-between flex-1">
+            {/* Song details */}
             <div className="space-y-1">
               <h3 className="text-base font-bold text-[#d5d5d5] uppercase truncate font-mono">{currentSong.title}</h3>
               <p className="text-sm text-[#7a7a7a] truncate font-mono">{currentSong.artist}</p>
@@ -95,13 +103,22 @@ const PUBGPlayer: React.FC<PlayerProps> = ({ onClose, currentSong, isPlaying, to
               <button className="text-[#7a7a7a] hover:text-[#f1af34] transition-colors">
                 <Volume2 size={20} />
               </button>
-              
-              <button 
-                onClick={onClose}
-                className="text-[#7a7a7a] hover:text-[#f1af34] transition-colors"
-              >
-                <X size={20} />
-              </button>
+            </div>
+          </div>
+        </div>
+        
+        {/* Progress bar and timestamps at bottom */}
+        <div className="mt-3 space-y-1">
+          <div className="flex items-center gap-2">
+            <Slider
+              value={[progressPercentage]}
+              max={100}
+              step={1}
+              onValueChange={handleProgressChange}
+              className="h-1.5 flex-grow"
+            />
+            <div className="text-xs font-mono bg-[#222222] text-[#f1af34] px-2 py-1 border border-[#3c3c3c]">
+              {formatTime(currentTime)} / {formatTime(currentSong.duration)}
             </div>
           </div>
         </div>

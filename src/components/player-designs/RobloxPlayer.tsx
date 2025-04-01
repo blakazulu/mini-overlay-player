@@ -103,19 +103,16 @@ const RobloxPlayer: React.FC<PlayerProps> = ({
         
         {/* Progress bar and timestamps at bottom */}
         <div className="mt-3 space-y-1">
-          <Slider
-            value={[progressPercentage]}
-            max={100}
-            step={1}
-            onValueChange={handleProgressChange}
-            className="h-1.5"
-          />
-          <div className="flex justify-between">
-            <div className="text-xs font-bold text-[#393b3d]">
-              {formatTime(currentTime)}
-            </div>
-            <div className="text-xs font-bold text-[#393b3d]">
-              {formatTime(currentSong.duration)}
+          <div className="flex items-center gap-2">
+            <Slider
+              value={[progressPercentage]}
+              max={100}
+              step={1}
+              onValueChange={handleProgressChange}
+              className="h-1.5 flex-grow"
+            />
+            <div className="text-xs font-bold text-[#393b3d] bg-white px-2 py-1 rounded border border-[#cccccc]">
+              {formatTime(currentTime)}/{formatTime(currentSong.duration)}
             </div>
           </div>
         </div>

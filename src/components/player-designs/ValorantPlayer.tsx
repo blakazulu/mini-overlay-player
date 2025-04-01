@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { X, Play, Pause, SkipBack, SkipForward, Volume2 } from 'lucide-react';
+import { X, Play, Pause, SkipBack, SkipForward, Volume2, HelpCircle, Search } from 'lucide-react';
 import { Input } from '../ui/input';
 import { Slider } from '../ui/slider';
 
@@ -40,13 +40,25 @@ const ValorantPlayer: React.FC<PlayerProps> = ({
       
       {/* Main content */}
       <div className="relative z-10 p-4 flex flex-col h-full">
-        {/* Search bar - full width */}
-        <div className="w-full mb-3">
-          <Input 
-            type="text" 
-            placeholder="SEARCH TRACKS..."
-            className="w-full bg-[#1f2731] border-0 text-xs h-8 text-[#ece8e1] placeholder:text-[#ece8e1]/40 rounded-none tracking-widest uppercase font-medium"
-          />
+        {/* Search bar with help and close buttons */}
+        <div className="flex items-center gap-2 mb-3">
+          <div className="relative flex-1">
+            <Search size={16} className="absolute left-2 top-1/2 -translate-y-1/2 text-[#ece8e1]/40" />
+            <Input 
+              type="text" 
+              placeholder="SEARCH TRACKS..."
+              className="w-full bg-[#1f2731] border-0 text-xs h-8 pl-8 text-[#ece8e1] placeholder:text-[#ece8e1]/40 rounded-none tracking-widest uppercase font-medium"
+            />
+          </div>
+          <button className="text-[#ece8e1]/70 hover:text-[#ece8e1] transition-colors bg-[#1f2731] h-8 w-8 flex items-center justify-center">
+            <HelpCircle size={16} />
+          </button>
+          <button 
+            onClick={onClose}
+            className="text-[#ece8e1]/70 hover:text-[#ff4655] transition-colors bg-[#1f2731] h-8 w-8 flex items-center justify-center"
+          >
+            <X size={16} />
+          </button>
         </div>
         
         <div className="flex flex-1 gap-3">
@@ -89,31 +101,23 @@ const ValorantPlayer: React.FC<PlayerProps> = ({
               <button className="text-[#ece8e1]/70 hover:text-[#ece8e1] transition-colors">
                 <Volume2 size={20} />
               </button>
-              
-              <button 
-                onClick={onClose}
-                className="text-[#ece8e1]/70 hover:text-[#ff4655] transition-colors"
-              >
-                <X size={20} />
-              </button>
             </div>
           </div>
         </div>
         
         {/* Progress bar and timestamps at bottom */}
         <div className="mt-3 space-y-1">
-          <div className="relative">
+          <div className="flex items-center gap-2">
             <Slider
               value={[progressPercentage]}
               max={100}
               step={1}
               onValueChange={handleProgressChange}
-              className="h-1"
+              className="h-1 flex-grow"
             />
-          </div>
-          <div className="flex justify-between text-xs text-[#ece8e1]/70">
-            <span>{formatTime(currentTime)}</span>
-            <span>{formatTime(currentSong.duration)}</span>
+            <div className="bg-[#1f2731] text-xs text-[#ece8e1]/70 px-2 py-1">
+              {formatTime(currentTime)}/{formatTime(currentSong.duration)}
+            </div>
           </div>
         </div>
       </div>

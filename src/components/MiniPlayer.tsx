@@ -2,17 +2,20 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { useMiniPlayer, PlayerDesign } from '@/contexts/MiniPlayerContext';
 import CSPlayer from './player-designs/CSPlayer';
+import CounterStrike2Player from './player-designs/CounterStrike2Player';
 import MinecraftPlayer from './player-designs/MinecraftPlayer';
 import FortnitePlayer from './player-designs/FortnitePlayer';
-import SimsPlayer from './player-designs/SimsPlayer';
+import Sims4Player from './player-designs/Sims4Player';
 import RobloxPlayer from './player-designs/RobloxPlayer';
-import MarvelPlayer from './player-designs/MarvelPlayer';
+import MarvelRivalsPlayer from './player-designs/MarvelRivalsPlayer';
 import LOLPlayer from './player-designs/LOLPlayer';
 import DotaPlayer from './player-designs/DotaPlayer';
 import ValorantPlayer from './player-designs/ValorantPlayer';
 import PUBGPlayer from './player-designs/PUBGPlayer';
-import { Progress } from './ui/progress';
-import { Slider } from './ui/slider';
+import OverwatchPlayer from './player-designs/OverwatchPlayer';
+import Rainbow6Player from './player-designs/Rainbow6Player';
+import WarzonePlayer from './player-designs/WarzonePlayer';
+import RocketLeaguePlayer from './player-designs/RocketLeaguePlayer';
 
 interface Position {
   x: number;
@@ -122,37 +125,36 @@ const MiniPlayer: React.FC<MiniPlayerProps> = ({ onClose, currentSong = defaultS
     };
 
     switch (currentDesign) {
+      case 'counterstrike2':
+        return <CounterStrike2Player {...playerProps} />;
       case 'csgo':
         return <CSPlayer {...playerProps} />;
       case 'minecraft':
         return <MinecraftPlayer {...playerProps} />;
       case 'fortnite':
         return <FortnitePlayer {...playerProps} />;
-      case 'valorant':
-        return <ValorantPlayer {...playerProps} />;
-      case 'pubg':
-        return <PUBGPlayer {...playerProps} />;
+      case 'sims4':
+        return <Sims4Player {...playerProps} />;
+      case 'roblox':
+        return <RobloxPlayer {...playerProps} />;
+      case 'marvelrivals':
+        return <MarvelRivalsPlayer {...playerProps} />;
       case 'lol':
         return <LOLPlayer {...playerProps} />;
       case 'dota':
         return <DotaPlayer {...playerProps} />;
-      case 'rocketleague':
-        return <RobloxPlayer {...playerProps} />; // Using Roblox design for Rocket League for now
-      case 'warframe':
-        return <SimsPlayer {...playerProps} />; // Using Sims design for Warframe for now
-      case 'tarkov':
-        return <CSPlayer {...playerProps} />; // Fallback to CS design
+      case 'valorant':
+        return <ValorantPlayer {...playerProps} />;
+      case 'pubg':
+        return <PUBGPlayer {...playerProps} />;
       case 'overwatch':
-        return <ValorantPlayer {...playerProps} />; // Using Valorant design for Overwatch
+        return <OverwatchPlayer {...playerProps} />;
       case 'rainbow6':
-        return <CSPlayer {...playerProps} />; // Using CS design for Rainbow Six
-      case 'splitgate':
-        return <ValorantPlayer {...playerProps} />; // Using Valorant design for Splitgate
-      case 'pathofexile':
-        return <DotaPlayer {...playerProps} />; // Using Dota design for Path of Exile
+        return <Rainbow6Player {...playerProps} />;
       case 'warzone':
-        return <PUBGPlayer {...playerProps} />; // Using PUBG design for Warzone
-      // Default fallback to CS
+        return <WarzonePlayer {...playerProps} />;
+      case 'rocketleague':
+        return <RocketLeaguePlayer {...playerProps} />;
       default:
         return <CSPlayer {...playerProps} />;
     }

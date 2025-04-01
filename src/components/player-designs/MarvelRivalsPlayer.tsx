@@ -1,8 +1,7 @@
 
 import React from 'react';
-import { X, Play, Pause, SkipBack, SkipForward, Volume2, Search, HelpCircle } from 'lucide-react';
+import { X, Play, Pause, SkipBack, SkipForward, Volume2, Search } from 'lucide-react';
 import { Input } from '../ui/input';
-import { cn } from '@/lib/utils';
 import { Slider } from '../ui/slider';
 
 interface PlayerProps {
@@ -21,7 +20,7 @@ interface PlayerProps {
   handleProgressChange: (value: number[]) => void;
 }
 
-const CSPlayer: React.FC<PlayerProps> = ({ 
+const MarvelRivalsPlayer: React.FC<PlayerProps> = ({ 
   onClose, 
   currentSong, 
   isPlaying, 
@@ -32,29 +31,26 @@ const CSPlayer: React.FC<PlayerProps> = ({
   handleProgressChange
 }) => {
   return (
-    <div className="w-[450px] h-[200px] bg-[#1b1e22] border border-[#2d322f] overflow-hidden relative">
-      {/* CS-style UI */}
-      <div className="absolute inset-0 bg-gradient-to-b from-[#252a2e] to-[#1b1e22] z-0 opacity-90"></div>
-      <div className="absolute top-0 left-0 right-0 h-1 bg-[#f7b740] z-10"></div>
+    <div className="w-[450px] h-[200px] bg-[#121212] border-2 border-[#ed1d24] marvel-glow rounded-md overflow-hidden relative">
+      {/* Marvel style UI - dark with red accents */}
+      <div className="absolute inset-0 bg-gradient-to-b from-[#1a1a1a] to-[#121212] z-0"></div>
+      <div className="absolute top-0 left-0 right-0 h-1 bg-[#ed1d24] z-10"></div>
       
-      {/* Main content layout matching the sketch */}
+      {/* Main content layout */}
       <div className="relative z-10 p-4 flex flex-col h-full">
-        {/* Search bar with help and close buttons */}
+        {/* Search bar with close button */}
         <div className="flex items-center gap-2 mb-4">
           <div className="relative flex-1">
-            <Search size={16} className="absolute left-2 top-1/2 -translate-y-1/2 text-[#6d7379]" />
+            <Search size={16} className="absolute left-2 top-1/2 -translate-y-1/2 text-[#888888]" />
             <Input 
               type="text" 
-              placeholder="Search tracks..."
-              className="w-full bg-[#15191c] border-[#36383a] text-xs h-8 pl-8 text-[#c8d2db] placeholder:text-[#6d7379]"
+              placeholder="Search Marvel tracks..."
+              className="w-full bg-[#1a1a1a] border-[#444444] text-xs h-8 pl-8 text-white placeholder:text-[#888888]"
             />
           </div>
-          <button className="text-[#6d7379] hover:text-[#f7b740] transition-colors p-1">
-            <HelpCircle size={18} />
-          </button>
           <button 
             onClick={onClose}
-            className="text-[#6d7379] hover:text-[#f7b740] transition-colors p-1"
+            className="text-[#888888] hover:text-[#ed1d24] transition-colors p-1"
           >
             <X size={18} />
           </button>
@@ -64,7 +60,7 @@ const CSPlayer: React.FC<PlayerProps> = ({
           {/* Album artwork and controls */}
           <div className="flex flex-col gap-2">
             {/* Album artwork - left side */}
-            <div className="h-[110px] w-[110px] border border-[#36383a] overflow-hidden flex-shrink-0 relative">
+            <div className="h-[110px] w-[110px] border-2 border-[#ed1d24] overflow-hidden flex-shrink-0 relative">
               <img 
                 src={currentSong.cover} 
                 alt={currentSong.title} 
@@ -82,10 +78,10 @@ const CSPlayer: React.FC<PlayerProps> = ({
                 className="h-1.5 mb-1"
               />
               <div className="flex justify-between">
-                <span className="text-xs text-[#f7b740] font-mono">
+                <span className="text-xs text-[#ed1d24] font-bold">
                   {formatTime(currentTime)}
                 </span>
-                <span className="text-xs text-[#6d7379] font-mono">
+                <span className="text-xs text-[#888888]">
                   {formatTime(currentSong.duration)}
                 </span>
               </div>
@@ -96,28 +92,28 @@ const CSPlayer: React.FC<PlayerProps> = ({
           <div className="flex flex-col justify-between flex-1">
             {/* Song details */}
             <div className="space-y-1 mb-2">
-              <h3 className="text-lg font-mono text-[#c8d2db] truncate tracking-tight">{currentSong.title}</h3>
-              <p className="text-sm text-[#6d7379] font-mono truncate">{currentSong.artist}</p>
+              <h3 className="text-lg font-bold text-white tracking-tight uppercase">{currentSong.title}</h3>
+              <p className="text-sm text-[#888888]">{currentSong.artist}</p>
             </div>
             
             {/* Controls */}
-            <div className="flex justify-between items-center mb-2">
-              <button className="text-[#6d7379] hover:text-[#f7b740] transition-colors">
+            <div className="flex justify-between items-center p-2 bg-black/30 rounded border border-[#333333]">
+              <button className="text-[#888888] hover:text-[#ed1d24] transition-colors">
                 <SkipBack size={20} />
               </button>
               
               <button 
                 onClick={togglePlayback} 
-                className="text-[#c8d2db] hover:text-[#f7b740] transition-colors bg-[#252a2e] p-1.5 rounded-sm border border-[#36383a]"
+                className="text-white bg-[#ed1d24] hover:bg-[#ff3333] transition-colors p-2 rounded"
               >
                 {isPlaying ? <Pause size={20} /> : <Play size={20} />}
               </button>
               
-              <button className="text-[#6d7379] hover:text-[#f7b740] transition-colors">
+              <button className="text-[#888888] hover:text-[#ed1d24] transition-colors">
                 <SkipForward size={20} />
               </button>
               
-              <button className="text-[#6d7379] hover:text-[#f7b740] transition-colors">
+              <button className="text-[#888888] hover:text-[#ed1d24] transition-colors">
                 <Volume2 size={20} />
               </button>
             </div>
@@ -128,4 +124,4 @@ const CSPlayer: React.FC<PlayerProps> = ({
   );
 };
 
-export default CSPlayer;
+export default MarvelRivalsPlayer;

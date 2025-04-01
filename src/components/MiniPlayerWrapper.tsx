@@ -15,21 +15,21 @@ const MiniPlayerWrapper: React.FC = () => {
   const { isVisible, hideMiniPlayer, currentDesign, setDesign } = useMiniPlayer();
 
   const themes = [
-    { id: 'fortnite', name: 'Fortnite' },
+    { id: 'counterstrike2', name: 'Counter-Strike 2' },
     { id: 'csgo', name: 'CSGO' },
-    { id: 'lol', name: 'League of Legends' },
-    { id: 'tarkov', name: 'Escape From Tarkov' },
     { id: 'minecraft', name: 'Minecraft' },
-    { id: 'overwatch', name: 'Overwatch' },
-    { id: 'pubg', name: 'PUBG' },
-    { id: 'rainbow6', name: 'Rainbow Six Siege' },
-    { id: 'splitgate', name: 'Splitgate: Arena Warfare' },
-    { id: 'pathofexile', name: 'Path of Exile' },
-    { id: 'valorant', name: 'Valorant' },
+    { id: 'fortnite', name: 'Fortnite' },
+    { id: 'sims4', name: 'The Sims 4' },
+    { id: 'roblox', name: 'ROBLOX' },
+    { id: 'marvelrivals', name: 'Marvel Rivals' },
+    { id: 'lol', name: 'League of Legends' },
     { id: 'dota', name: 'Dota 2' },
+    { id: 'valorant', name: 'Valorant' },
+    { id: 'pubg', name: 'PUBG: BATTLEGROUNDS' },
+    { id: 'overwatch', name: 'Overwatch' },
+    { id: 'rainbow6', name: 'Rainbow Six Siege' },
     { id: 'warzone', name: 'Call of Duty: Warzone' },
-    { id: 'rocketleague', name: 'Rocket League' },
-    { id: 'warframe', name: 'Warframe' }
+    { id: 'rocketleague', name: 'Rocket League' }
   ];
 
   return (

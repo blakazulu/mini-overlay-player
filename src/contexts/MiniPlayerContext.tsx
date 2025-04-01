@@ -2,21 +2,21 @@
 import React, { createContext, useContext, useState, useCallback } from 'react';
 
 export type PlayerDesign = 
-  | 'fortnite' 
+  | 'counterstrike2' 
   | 'csgo' 
-  | 'lol' 
-  | 'tarkov' 
   | 'minecraft' 
-  | 'overwatch' 
-  | 'pubg' 
-  | 'rainbow6' 
-  | 'splitgate' 
-  | 'pathofexile' 
-  | 'valorant' 
+  | 'fortnite' 
+  | 'sims4' 
+  | 'roblox' 
+  | 'marvelrivals' 
+  | 'lol' 
   | 'dota' 
+  | 'valorant' 
+  | 'pubg' 
+  | 'overwatch' 
+  | 'rainbow6' 
   | 'warzone' 
-  | 'rocketleague' 
-  | 'warframe';
+  | 'rocketleague';
 
 interface MiniPlayerContextType {
   isVisible: boolean;
